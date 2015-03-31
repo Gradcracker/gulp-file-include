@@ -72,6 +72,7 @@ module.exports = function(options) {
 
       // jshint ignore: start
       var exp = /if(.*)\{/.exec(match)[1];
+      ctx[exp.replace(/[{()} ]/g, '')] = ctx[exp.replace(/[{()} ]/g, '')] || '';
       included = new Function('var context = this; with (context) { return ' + exp + '; }').call(ctx);
       // jshint ignore: end
 
@@ -145,6 +146,7 @@ module.exports = function(options) {
           var key = keys[i];
           text = text.replace(new RegExp(prefix + key, 'g'), data[key]);
         }
+        text = parseConditionalIncludes(text, variables);
       }
 
       matches = includeRegExp.exec(text);
